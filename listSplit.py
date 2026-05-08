@@ -4,7 +4,7 @@ from ast import literal_eval
 from collections import Counter
 import warnings
 
-print(f"Disabling warning messages... (I'm not hacking your shit dw)")
+print(f"Disabling warning messages...")
 warnings.filterwarnings("ignore")
 
 pd.set_option("display.max_columns", None)
@@ -23,6 +23,10 @@ individualSongsArray = []
 overallArray = []
 scoreDict = {}
 scoreDictSort = {}
+
+# ==================================================
+# Reading the downloaded responses CSV
+# ==================================================
 
 responsesCsv = pd.read_csv("responses_array.csv")
 # print(responsesCsv)
@@ -49,29 +53,31 @@ def placementCheck(length, total, user) :
 
     else :
 
-        print(f"ERROR: Ballot {user} has errors with song placements.")
+        raise Exception(f"ERROR: Ballot {user} has errors with song placements.\nLength: {length}\nTotal: {total}")
 
-arrayCheck = [1,2,3,4,5,6,7,8,9,10,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,21,22,23,26,26,26,26,26,29]
-arrayNoDupe = [1,2,3,4,5,6,7,8,9,10,21,22,23,29]
-evilArray = [1,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,100]
-evilArray2 = [1,100]
+# arrayCheck = [1,2,3,4,5,6,7,8,9,10,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,21,22,23,26,26,26,26,26,29]
+# arrayNoDupe = [1,2,3,4,5,6,7,8,9,10,21,22,23,29]
+# arrayWithDupe = [1,2,3,4,5,6,7,8,9,10,15.5,21,22,23,26,29]
+
+# arrayCheck = [1,2,3,4,5,6,7,8,9,10,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,15.5,22,22,22,26,26,26,26,26,29]
+# arrayNoDupe = [1,2,3,4,5,6,7,8,9,10,29]
+# arrayWithDupe = [1,2,3,4,5,6,7,8,9,10,15.5,22,26,29]
+
+# evilArray = [1,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,50.5,100]
+# evilArray2 = [1,100]
 
 def tiersCheck(rankList, nonDupeList, fullTierList) :
 
-    #z = 1
+    print(f"ranklist: {rankList}\nnondupelist: {nonDupeList}\nfulltierlist: {fullTierList}")
+
     upperBound = ()
     lowerBound = ()
-    # print("length",len(nonDupeList))
-    # print(nonDupeList)
 
     if len(nonDupeList) == 0 :
 
         print("TIERING: List is fully tiered.")
 
-        #print("nd1",nonDupeList)
         nonDupeList = fullTierList
-        #print("nd2",nonDupeList)
-        #z = -0.5
 
         for i in range(0, len(nonDupeList) - 1) :
 
@@ -93,33 +99,60 @@ def tiersCheck(rankList, nonDupeList, fullTierList) :
 
                 #print(f"ERROR: Issue with tier {i + 1}.")
                 raise Exception(f"ERROR: Issue with tier {i + 1}.")
-                return
 
     else :
 
         print("TIERING: List is partially tiered.")
 
-        for i in range(0, len(nonDupeList) - 1) :
+        for i in range(0, len(rankList) - 1) :
 
-            if nonDupeList[i] + 2 > nonDupeList[i + 1] :
+            # print(rankList[i])
+            #rankI = rankList[i]
+
+            if rankList[i] + 2 > rankList[i + 1] :
+                # print("i: ",i)
+
+                # print(f"1: {rankList[i] + 2}")
+                # print(f"2: {rankList[i + 1]}")
+                # print(f"Tier {i + 1} is good.")
 
                 pass
 
             else :
 
+                # print("i: ",i)
+
+                lowerBound = i + 2
+                tierNum = rankList[i + 1]
+                tierCount = Counter(rankList)[tierNum]
+
+                #tierIndex = i
+
+                print(f"tier num, tier count: {tierNum,tierCount}")
+
+                upperBound = i + 1 + tierCount
+
                 #print(i)
-                sum = nonDupeList[i] + nonDupeList[i + 1]
+                # print(f"1e: {rankList[i] + 2}")
+                # print(f"2e: {rankList[i + 1]}")
+                sum = lowerBound + upperBound
+                print(f"sum: {sum}")
 
-                lowerBound = nonDupeList[i]
-                upperBound = nonDupeList[i + 1]
+                # lowerBound = rankList[i]
+                # upperBound = rankList[i + 1]
 
-                difference = upperBound - lowerBound - 1
-                #print("diff",difference)
+                print(f"upb: {upperBound}\nlowb: {lowerBound}")
+
+                difference = upperBound - lowerBound +1
+                print(f"diff: {difference}")
 
                 mean = (sum) / 2
-                #print("mean",mean)
+                print(f"mean: {mean}")
 
                 listCount = Counter(rankList)[mean]
+                print(f"listcount: {listCount}")
+
+                #print(f"print listcount/diff {listCount} {difference}")
 
                 #print(f"occurences of diff {listCount}")
 
@@ -129,10 +162,13 @@ def tiersCheck(rankList, nonDupeList, fullTierList) :
 
                 else :
 
-                    print(f"ERROR: Issue with tier {i + 1}.")
-                    return
+                    raise Exception(f"ERROR: Issue with tier {i + 1}.")
             
-#tiersCheck(evilArray,evilArray2)
+# tiersCheck(arrayCheck,arrayNoDupe,arrayWithDupe)
+
+# exit()
+
+# ==================================================
 
 def songArrayAppend(songs, scores) :
 
@@ -168,8 +204,9 @@ def calculateResults(songs, scores) :
 
     return(scoreDictSort, alphabetDictSort)
 
-
+# ==================================================
 linebreak()
+# ==================================================
 
 for i, row in responses.iterrows() :
 
@@ -195,7 +232,7 @@ for i, row in responses.iterrows() :
 
     else :
 
-        print(f"ERROR: Ballot {user} has a splitting error.")
+        raise Exception(f"ERROR: Ballot {user} has a splitting error.\nSong and artist length: {len(responses["song_artist_and_name"][i])}\nSong placements length: {len(responses["song_placements"][i])}\nFull list length: {len(responses["song_list_full"][i])}\nSong list length: {len(responses["song_names"][i])}\nArtist list length: {len(responses["song_artists"][i])}")
 
     responsesPlacements = responses["song_placements"][i]
     dupeCheckSet = set(responses["song_placements"][i])
