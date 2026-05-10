@@ -82,4 +82,4 @@ for i, row in responses.iterrows() :
 
     else :
 
-        report = open(f"{responses["discord_user"][i]}.txt", "w")
+        report = open(f"individual_reports/output/{responses["discord_user"][i]}.txt", "w")
