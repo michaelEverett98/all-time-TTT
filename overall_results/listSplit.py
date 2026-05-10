@@ -28,7 +28,7 @@ scoreDictSort = {}
 # Reading the downloaded responses CSV
 # ==================================================
 
-responsesCsv = pd.read_csv("overall_results/data/responses_array.csv")
+responsesCsv = pd.read_csv("data/responses_array.csv")
 # print(responsesCsv)
 # print(responsesCsv["song_list_full"][0])
 # print(len(responsesCsv["song_list_full"][0]))
@@ -300,8 +300,8 @@ outputAlphabet = pd.Series(finalScoresAlphabet)
 
 # Output the list of artists and the list of songs as csv to scan through and check for any weird things
 
-outputScores.to_csv("overall_results/final_results.csv")
-outputAlphabet.to_csv("overall_results/results_alphabetical.csv")
+outputScores.to_csv("overall_results/output/final_results.csv")
+outputAlphabet.to_csv("overall_results/output/results_alphabetical.csv")
 
 class response :
     def __init__(self, discord_user):
